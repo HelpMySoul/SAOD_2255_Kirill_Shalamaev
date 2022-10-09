@@ -189,12 +189,56 @@ namespace NewList
 
             return result;
         }
+        public void Sort(Func<Node<T>, bool> condition)
+        {
+            Node<T> now;
+            bool run = true;
+            while (run)
+            {
+                now = first;
+                run = false;
+                while (now.next != null)
+                {
+                    if (condition(now))
+                    {
+                        Swap(now, now.next);
+                        run = true;
+                        break;
+                    }
+                    else
+                    {
+                        now = now.next;
+                    }
+                    
+                }
+            }
+        }
+        void Swap(Node<T> node1, Node<T> node2)
+        {
+            Node<T> nodebefore = node1.previous;
+            Node<T> nodeafter = node2.next;
+            if (nodebefore != null)
+                nodebefore.next = node2;
+            else
+                first = node2;
+            node2.previous = nodebefore;
+            node2.next = node1;
+            node1.previous = node2;
+            node1.next = nodeafter;
+            if (nodeafter != null)
+                nodeafter.previous = node1;
+            else
+                last = node1;
+        }
         void Remover(Node<T> now)
         {
             Node<T> prevNode = now.previous;
             Node<T> nextNode = now.next;
-            prevNode.next = nextNode;
-            nextNode.previous = prevNode;
+            if (prevNode != null)
+                prevNode.next = nextNode;
+            if (nextNode != null)
+                nextNode.previous = prevNode;
+
         }
         Node<T> Find(int index)
         {

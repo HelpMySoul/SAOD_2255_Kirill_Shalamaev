@@ -50,6 +50,7 @@ namespace NewList
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.textBox3 = new System.Windows.Forms.TextBox();
+            this.button8 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -228,11 +229,22 @@ namespace NewList
             this.textBox3.Size = new System.Drawing.Size(100, 20);
             this.textBox3.TabIndex = 23;
             // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(12, 444);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(194, 23);
+            this.button8.TabIndex = 24;
+            this.button8.Text = "Сортировать по количеству знаков";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 473);
+            this.Controls.Add(this.button8);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.numericUpDown3);
             this.Controls.Add(this.numericUpDown2);
@@ -288,6 +300,7 @@ namespace NewList
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.NumericUpDown numericUpDown3;
         private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Button button8;
     }
 }
 

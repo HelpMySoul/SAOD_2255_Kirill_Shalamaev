@@ -128,5 +128,11 @@ namespace NewList
             RUpdate();
 
         }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            MyList.Sort((Node<string> now) => now.value.Length > now.next.value.Length); // условие можно задать другое, но т.к. сравниваются строки то я их по длинне сортирую
+            RUpdate();
+        }
     }
 }
