@@ -8,7 +8,8 @@ namespace NewStack
 {
     class MyStack<T>
     {
-        private T[] arr; int count;
+        private T[] arr; 
+        private int count;
         public MyStack(int size)
         {
             arr = new T[size];
