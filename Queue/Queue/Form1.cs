@@ -19,11 +19,6 @@ namespace Queue
             mq = new NewQueue<string>(8);
         }
 
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -74,11 +69,6 @@ namespace Queue
 
             }
             richTextBox1.Text = richTextBox1.Text.Trim();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

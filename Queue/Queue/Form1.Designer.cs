@@ -96,7 +96,7 @@ namespace Queue
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(253, 20);
             this.textBox3.TabIndex = 6;
-            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
+           
             // 
             // Form1
             // 
@@ -112,7 +112,7 @@ namespace Queue
             this.Controls.Add(this.richTextBox1);
             this.Name = "Form1";
             this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            
             this.ResumeLayout(false);
             this.PerformLayout();
 

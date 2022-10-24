@@ -10,12 +10,11 @@ namespace Queue
     {
         public int Capacity
         {
-            get;
+            get { return arr.Length; }
         }
         public NewQueue(int size)
         {
             arr = new T[size];
-            Capacity = arr.Length;
         }
         private T[] arr;
         int indOut, indIn, count;
