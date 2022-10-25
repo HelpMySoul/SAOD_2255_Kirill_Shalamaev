@@ -16,12 +16,7 @@ namespace NewList
         public Form1()
         {
             InitializeComponent();
-            
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
+            MyList.SortRule = (Node<string> now) => now.value.Length > now.next.value.Length;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -131,8 +126,15 @@ namespace NewList
 
         private void button8_Click(object sender, EventArgs e)
         {
-            MyList.Sort((Node<string> now) => now.value.Length > now.next.value.Length); // условие можно задать другое, но т.к. сравниваются строки то я их по длинне сортирую
+            
+            MyList.Sort();
             RUpdate();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            SortTask sortTask = new SortTask();
+            sortTask.Show();
         }
     }
 }

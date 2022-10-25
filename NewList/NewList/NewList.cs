@@ -11,6 +11,16 @@ namespace NewList
     {
         Node<T> first = null;
         Node<T> last = null;
+        public int Count
+        {
+            get { return FindSize(first); }
+        }
+        public Func<Node<T>, bool> SortRule
+        {
+            get;
+            set;
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return new ListIEnumerator<T>(ToArray());
@@ -189,7 +199,7 @@ namespace NewList
 
             return result;
         }
-        public void Sort(Func<Node<T>, bool> condition)
+        public void Sort()
         {
             Node<T> now;
             bool run = true;
@@ -199,7 +209,7 @@ namespace NewList
                 run = false;
                 while (now.next != null)
                 {
-                    if (condition(now))
+                    if (SortRule.Invoke(now))
                     {
                         Swap(now, now.next);
                         run = true;
@@ -245,7 +255,7 @@ namespace NewList
             if (first == null)
                 return null;
             Node<T> now = first;
-            while (index != 0)
+            while (index != 0 && Count != 1)
             {
                 now = now.next;
                 index--;
@@ -276,6 +286,127 @@ namespace NewList
                 now = now.next;
             }
             return size;
+        }
+        /// Функции доп. задание
+        public NewList<T> Split(out NewList<T> outList)
+        {
+            
+            NewList<T> newList = new NewList<T>();
+            outList = new NewList<T>();
+            Node<T> middle = Find(Count / 2);
+            outList.last = middle.previous;
+            outList.first = first;
+            newList.first = middle;
+            newList.last = last;
+            outList.last.next = null;
+            middle.previous = null;
+            //Console.WriteLine($"Конец 1 - {outList.last.value} Начало 2 - {middle.value}");
+            return newList;
+        }
+        public NewList<T> Merge(in NewList<T> listToMerge)
+        {
+            last.next = listToMerge.first;
+            listToMerge.first.previous = last.next;
+            last = listToMerge.last;
+            return this;
+        }
+        public NewList<T> SortedMerge(NewList<T> SortedList)
+        {
+            NewList<T> result = new NewList<T> { };
+            NewList<T> nodesToAdd = new NewList<T> { };
+            nodesToAdd.Append(first.value);
+            nodesToAdd.Append(SortedList.first.value);
+            this.RemoveAt(0);
+            SortedList.RemoveAt(0);
+            nodesToAdd.SortRule = SortedList.SortRule;
+            while (true)
+            {
+                if (nodesToAdd.SortRule.Invoke(nodesToAdd.first))
+                {
+                    result.Append(nodesToAdd[0]);
+                    if (this.Count > 0)
+                    {
+                        nodesToAdd[0] = this[0];
+                        this.RemoveAt(0);
+                    }
+                    else
+                    {
+                        nodesToAdd.RemoveAt(0);
+                        break;
+                    }
+                    
+                }
+                else
+                {
+                    result.Append(nodesToAdd[1]);
+                    if (SortedList.Count > 0)
+                    {
+                        nodesToAdd[1] = SortedList[0];
+                        SortedList.RemoveAt(0);
+                    }
+                    else
+                    {
+                        nodesToAdd.RemoveAt(1);
+                        break;
+                    }
+                }
+            }
+            result.Append(nodesToAdd[0]);
+            foreach(T t in this)
+            {
+                result.Append(t);
+            }
+            foreach (T t in SortedList)
+            {
+                result.Append(t);
+            }
+            result.SortRule = SortedList.SortRule;
+            return result;
+        }
+        public NewList<T> FastSort()
+        {
+            NewList<T> result = new NewList<T> { };
+            NewList<NewList<T>> Lists;
+            FastSort(out Lists, this);
+            foreach(NewList<T> ls in Lists)
+            {
+                foreach(T t in ls)
+                {
+                    result.Append(t);
+                }
+                 
+            }
+            return result;
+        }
+        private void FastSort(out NewList<NewList<T>> lists, NewList<T> listToSort)
+        {
+            
+            int startSize = listToSort.Count;
+            lists = new NewList<NewList<T>> {};
+            lists.Append(listToSort);
+            while(startSize != lists.FindSize(lists.first))
+            {
+                int n = lists.FindSize(lists.first);
+                for (int i = 0; i != n; i++)
+                {
+                    NewList<T> secondList;
+                    if (lists[i].Count > 1)
+                    {
+                        lists[i] = lists[i].Split(out secondList);
+                        lists.Append(secondList);                       
+                    }
+                }
+            }
+            foreach (NewList<T> nl in lists)
+            {
+                nl.SortRule = listToSort.SortRule;
+            }
+            while (lists.Count != 1)
+            {
+
+                lists[0] = lists[0].SortedMerge(lists[1]);
+                lists.RemoveAt(1);
+            }           
         }
     }
 }
