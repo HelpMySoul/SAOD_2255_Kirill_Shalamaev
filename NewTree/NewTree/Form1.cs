@@ -44,5 +44,14 @@ namespace NewTree
                 richTextBox1.Text = MyTree.Show();
             }
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            MyTree.Delete(Convert.ToInt32(numericUpDown2.Value));
+            if (MyTree.Count != 0)
+            {
+                richTextBox1.Text = MyTree.Show();
+            }
+        }
     }
 }

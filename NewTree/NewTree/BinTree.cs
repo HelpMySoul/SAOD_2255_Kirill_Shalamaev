@@ -7,7 +7,6 @@ namespace NewTree
     {
         TreeNode<T> root = null;
         public int Count { get; set; }
-
         public string Show()
         {
             List<List<T>> resultlist = new List<List<T>> { };
@@ -21,7 +20,6 @@ namespace NewTree
                     line += t+" ";
                 }
                 result += line+"\n";
-
             }
             return result;
         }
@@ -35,7 +33,6 @@ namespace NewTree
             {
                 Mainlist[level].Add(startNode.value);
             }
-            
             if(startNode.left != null)
             {
                 NodesToList(startNode.left, ref Mainlist, level + 1);
@@ -89,7 +86,6 @@ namespace NewTree
                                 Count++;
                                 break;
                             }
-                            
                         }
                         else
                         {
@@ -103,12 +99,9 @@ namespace NewTree
                                 Count++;
                                 break;
                             }
-
                         }
                     }
-                    
                 }
-               
             }
         }
         public ref T Find(T value)
@@ -128,7 +121,6 @@ namespace NewTree
                 return ref result.value;
             }
             throw new Exception("Нет значения");
-
         }
         void NodesToTreeNodeList(TreeNode<T> startNode, ref List<TreeNode<T>> Mainlist)
         {
@@ -142,10 +134,89 @@ namespace NewTree
                 NodesToTreeNodeList(startNode.right, ref Mainlist);
             }
         }
-        //void Delete(T value)
-        //{
-
-        //}
+        public void Delete(T value)
+        {
+            if (root == null)
+            {
+                return;
+            }
+            FindToDelete(value, root);
+        }
+        void FindToDelete(T value, TreeNode<T> now)
+        {
+            if (now.value.CompareTo(value) == 0)
+            {
+                DeleteNode(now);
+                return;
+            }
+            if(now.value.CompareTo(value) < 0)
+            {
+                now = now.right;
+            }
+            else
+            {
+                now = now.left;
+            }
+            if(now != null)
+            {
+                FindToDelete(value, now);
+            }
+            
+        }
+        void DeleteNode(TreeNode<T> node)
+        {
+            if (node.right == null && node.left == null)
+            {
+                if (node.parent != null)
+                {
+                    if (node.parent.right == node) { node.parent.right = null; }
+                    else { node.parent.left = null; }
+                }
+                else { root = null; }
+                node.parent = null;
+                return;
+            }
+            if (node.right == null || node.left == null)
+            {
+                TreeNode<T> child = (node.left == null) ? node.right : node.left;
+                if (node.parent.right == node) { node.parent.right = child; }
+                else { node.parent.left = child; }
+                child.parent = node.parent;
+                ClearRef(node);
+                return;
+            }
+            if (node.right.left == null)
+            {
+                TreeNode<T> child = node.right;
+                node.value = child.value;
+                if (child.right != null)
+                {
+                    node.right = child.right;
+                    child.right.parent = node;
+                    ClearRef(node.right);
+                }
+                else
+                {
+                    node.right = null;
+                }
+            }
+            else
+            {
+                TreeNode<T> rlNode = node.right;
+                while (rlNode.left != null)
+                {
+                    rlNode = rlNode.left;
+                }
+                node.value = rlNode.value;
+                DeleteNode(rlNode);
+            }
+        }
+        void ClearRef(TreeNode<T> node)
+        {
+            node.parent = null;
+            node.left = null;
+            node.right = null;
+        }
         void CreateNode(T value, TreeNode<T> parent, bool left7)
         {
             TreeNode<T> NewNode = new TreeNode<T>(value);
