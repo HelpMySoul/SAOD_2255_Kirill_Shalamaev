@@ -97,27 +97,24 @@ namespace NewList
 
         public void Remove(T Value)
         {
-            if (Find(Value) != null)
+            if (Find(Value) == null)
             {
-                Node<T> now = Find(Value);
-                if (now.Equals(first))
-                {
-                    first = first.next;
-                    first.previous = null;
-                }
-                else if (now.Equals(last))
-                {
-                    last = last.previous;
-                    last.next = null;
-                }
-                else
-                {
-                    Remover(now);
-                }
+                throw new ListExeption("Нет элемента");
+            }
+            Node<T> now = Find(Value);
+            if (now.Equals(first))
+            {
+                first = first.next;
+                first.previous = null;
+            }
+            else if (now.Equals(last))
+            {
+                last = last.previous;
+                last.next = null;
             }
             else
             {
-                throw new ListExeption("Нет элемента");
+                Remover(now);
             }
         }
         public void RemoveAt(int index)
@@ -126,55 +123,45 @@ namespace NewList
             {
                 throw new ListExeption("Неверный индекс");
             }
-            else
+            if (index == 0)
             {
-                if (index == 0)
+                if (first.next != null)
                 {
-                    if (first.next != null)
-                    {
-                        first = first.next;
-                        first.previous = null;
-                    }
-                    else
-                    {
-                        first = null;
-                        last = null;
-                    }
-
-                }
-                else if (index == FindSize(first))
-                {
-                    last = last.previous;
-                    last.next = null;
+                    first = first.next;
+                    first.previous = null;
                 }
                 else
                 {
-                    Remover(Find(index));
+                    first = null;
+                    last = null;
                 }
+            }
+            else if (index == FindSize(first))
+            {
+                last = last.previous;
+                last.next = null;
+            }
+            else
+            {
+                Remover(Find(index));
             }
         }
         public ref T FindRef(T value)
         {
-            if (Find(value) != null)
-            {
-                return ref Find(value).value;
-            }
-            else
+            if (Find(value) == null)
             {
                 throw new ListExeption("Нет элемента");
             }
-
+            return ref Find(value).value;
+            
         }
         public T FindId(int index)
         {
-            if (Find(index) != null)
-            {
-                return Find(index).value;
-            }
-            else
+            if (Find(index) == null)
             {
                 throw new ListExeption("Неверный индекс");
             }
+            return Find(index).value;
         }
         T[] ToArray()
         {
@@ -182,21 +169,17 @@ namespace NewList
             {
                 return new T[0];
             }
-
             if (last == first)
             {
                 return new T[1] { last.value };
             }
-
             T[] result = new T[FindSize(first)];
-
             Node<T> now = first;
             for (int i = 0; now != null; i++)
             {
                 result[i] = now.value;
                 now = now.next;
             }
-
             return result;
         }
         public void Sort()
@@ -219,7 +202,6 @@ namespace NewList
                     {
                         now = now.next;
                     }
-                    
                 }
             }
         }
@@ -248,7 +230,6 @@ namespace NewList
                 prevNode.next = nextNode;
             if (nextNode != null)
                 nextNode.previous = prevNode;
-
         }
         Node<T> Find(int index)
         {
@@ -273,12 +254,10 @@ namespace NewList
             }
             return now;
         }
-
         int FindSize(Node<T> now)
         {
             if (now == null)
                 return 0;
-
             int size = 1;
             while (now.next != null)
             {
@@ -290,7 +269,6 @@ namespace NewList
         /// Функции доп. задание
         public NewList<T> Split(out NewList<T> outList)
         {
-            
             NewList<T> newList = new NewList<T>();
             outList = new NewList<T>();
             Node<T> middle = Find(Count / 2);
@@ -300,7 +278,6 @@ namespace NewList
             newList.last = last;
             outList.last.next = null;
             middle.previous = null;
-            //Console.WriteLine($"Конец 1 - {outList.last.value} Начало 2 - {middle.value}");
             return newList;
         }
         public NewList<T> Merge(in NewList<T> listToMerge)
@@ -334,7 +311,6 @@ namespace NewList
                         nodesToAdd.RemoveAt(0);
                         break;
                     }
-                    
                 }
                 else
                 {
@@ -374,13 +350,11 @@ namespace NewList
                 {
                     result.Append(t);
                 }
-                 
             }
             return result;
         }
         private void FastSort(out NewList<NewList<T>> lists, NewList<T> listToSort)
         {
-            
             int startSize = listToSort.Count;
             lists = new NewList<NewList<T>> {};
             lists.Append(listToSort);
