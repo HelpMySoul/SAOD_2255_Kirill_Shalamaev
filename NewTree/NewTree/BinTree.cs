@@ -10,16 +10,16 @@ namespace NewTree
         public string Show()
         {
             List<List<T>> resultlist = new List<List<T>> { };
-            NodesToList(root,ref resultlist);
+            NodesToList(root, ref resultlist);
             string result = "";
-            foreach ( List<T> lt in resultlist)
+            foreach (List<T> lt in resultlist)
             {
                 string line = "";
                 foreach (T t in lt)
                 {
-                    line += t+" ";
+                    line += t + " ";
                 }
-                result += line+"\n";
+                result += line + "\n";
             }
             return result;
         }
@@ -33,7 +33,7 @@ namespace NewTree
             {
                 Mainlist[level].Add(startNode.value);
             }
-            if(startNode.left != null)
+            if (startNode.left != null)
             {
                 NodesToList(startNode.left, ref Mainlist, level + 1);
             }
@@ -48,79 +48,68 @@ namespace NewTree
             {
                 root = CreateNode(value, null);
                 Count++;
+                return;
             }
-            else
+            TreeNode<T> now = root;
+            while (true)
             {
-                TreeNode<T> now = root;
-                while (true)
+                if (now.value.CompareTo(value) == 0)
                 {
-                    if (now.value.CompareTo(value) == 0)
+                    return;
+                }
+                if (now.value.CompareTo(value) < 0)
+                {
+                    if (now.right != null)
                     {
-                        return;
+                        now = now.right;
                     }
-                    
-                    if (now.left == null && now.right == null)
+                    else
                     {
-                        if (now.value.CompareTo(value) < 0)
-                        {
-                            CreateNode(value, now, false);        
-                        }
-                        else
-                        {
-                            CreateNode(value, now, true);
-                        }
+                        CreateNode(value, now, false);
                         Count++;
                         break;
                     }
-                    else 
+                }
+                else
+                {
+                    if (now.left != null)
                     {
-                        if (now.value.CompareTo(value) < 0)
-                        {
-                            if (now.right != null)
-                            {
-                                now = now.right;
-                            }
-                            else
-                            {
-                                CreateNode(value, now, false);
-                                Count++;
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            if(now.left != null)
-                            {
-                                now = now.left;
-                            }
-                            else
-                            {
-                                CreateNode(value, now, true);
-                                Count++;
-                                break;
-                            }
-                        }
+                        now = now.left;
+                    }
+                    else
+                    {
+                        CreateNode(value, now, true);
+                        Count++;
+                        break;
                     }
                 }
+
             }
         }
         public ref T Find(T value)
         {
-            List<TreeNode<T>> resultlist = new List<TreeNode<T>> { };
-            NodesToTreeNodeList(root, ref resultlist);
-            TreeNode<T> result = null;
-            foreach (TreeNode<T> tn in resultlist)
-            {                
-                if(tn.value.CompareTo(value) == 0)
-                {
-                    result =tn;
-                }
-            }
-            if(result != null)
+            TreeNode<T> result = Find(value, root);
+            if (result == null)
             {
-                return ref result.value;
+                throw new Exception("Нет значения");
             }
-            throw new Exception("Нет значения");
+            return ref result.value;
+        }
+        TreeNode<T> Find(T value, TreeNode<T> startnode)
+        {
+            if (startnode.value.CompareTo(value) == 0)
+            {
+                return startnode;
+            }
+            if (startnode.right != null && startnode.value.CompareTo(value) < 0)
+            {
+                return Find(value, startnode.right);
+            }
+            if (startnode.left != null && startnode.value.CompareTo(value) > 0)
+            {
+                return Find(value, startnode.left);
+            }
+            return null;
         }
         void NodesToTreeNodeList(TreeNode<T> startNode, ref List<TreeNode<T>> Mainlist)
         {
@@ -149,7 +138,7 @@ namespace NewTree
                 DeleteNode(now);
                 return;
             }
-            if(now.value.CompareTo(value) < 0)
+            if (now.value.CompareTo(value) < 0)
             {
                 now = now.right;
             }
@@ -157,13 +146,25 @@ namespace NewTree
             {
                 now = now.left;
             }
-            if(now != null)
+            if (now != null)
             {
                 FindToDelete(value, now);
             }
-            
+
         }
         void DeleteNode(TreeNode<T> node)
+        {
+            if (IfLeaf(node))
+            {
+                return;
+            }
+            if (IfTransmission(node))
+            {
+                return;
+            }
+            IfElse(node);
+        }
+        bool IfLeaf(TreeNode<T> node)
         {
             if (node.right == null && node.left == null)
             {
@@ -174,8 +175,12 @@ namespace NewTree
                 }
                 else { root = null; }
                 node.parent = null;
-                return;
+                return true;
             }
+            return false;
+        }
+        bool IfTransmission(TreeNode<T> node)
+        {
             if (node.right == null || node.left == null)
             {
                 TreeNode<T> child = (node.left == null) ? node.right : node.left;
@@ -183,8 +188,12 @@ namespace NewTree
                 else { node.parent.left = child; }
                 child.parent = node.parent;
                 ClearRef(node);
-                return;
+                return true;
             }
+            return false;
+        }
+        void IfElse(TreeNode<T> node)
+        {
             if (node.right.left == null)
             {
                 TreeNode<T> child = node.right;
@@ -221,7 +230,6 @@ namespace NewTree
         {
             TreeNode<T> NewNode = new TreeNode<T>(value);
             NewNode.parent = parent;
-            Console.WriteLine(parent.value);
             if (left7)
             {
                 parent.left = NewNode;
@@ -230,13 +238,34 @@ namespace NewTree
             {
                 parent.right = NewNode;
             }
-            
+
         }
         TreeNode<T> CreateNode(T value, TreeNode<T> parent)
         {
             TreeNode<T> NewNode = new TreeNode<T>(value);
             NewNode.parent = null;
             return NewNode;
+        }
+        public List<TreeNode<T>> TreeTraversal()
+        {
+            List<TreeNode<T>> result = new List<TreeNode<T>> { };
+            if (root != null)
+            {
+                POT(root, result);
+            }
+            return result;
+        }
+        void POT(TreeNode<T> node, List<TreeNode<T>> result) //post-order traversal
+        {
+            if(node.left != null)
+            {
+                POT(node.left, result);
+            }
+            if (node.right != null)
+            {
+                POT(node.right, result);
+            }
+            result.Add(node);
         }
     }
 }

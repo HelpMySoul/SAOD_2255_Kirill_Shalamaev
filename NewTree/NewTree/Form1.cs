@@ -53,5 +53,15 @@ namespace NewTree
                 richTextBox1.Text = MyTree.Show();
             }
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string result = "";
+            foreach (TreeNode<int> i in MyTree.TreeTraversal())
+            {
+                result += i.value + " ";
+            }
+            textBox2.Text = result.Trim();
+        }
     }
 }
