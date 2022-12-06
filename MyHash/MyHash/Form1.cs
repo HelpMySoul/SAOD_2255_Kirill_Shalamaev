@@ -27,7 +27,7 @@ namespace MyHash
         {
             try
             {
-                textBox2.Text = Hash.Find(numericUpDown2.Value).Value;
+                textBox2.Text = Hash.Find(numericUpDown2.Value);
             }
             catch (Exception eh)
             {
@@ -55,16 +55,10 @@ namespace MyHash
                 result += $"{n.Key} - key, {n.Value} - value" + "\n";
             }
             richTextBox1.Text = result;
-            foreach (List<Node<decimal, string>> n in Hash)
+            foreach (Node<decimal, string> n in Hash)
             {
-                foreach (Node<decimal, string> s in n)
-                {
-                    Console.WriteLine(s.Value);
-                }
-                
+                    Console.WriteLine(n.Value);
             }
-        }
-
-        
+        }        
     }
 }

@@ -10,12 +10,10 @@ namespace MyHash
     {
         public T Value { get; set; }
         public K Key { get; }
-        public int HashKey { get; }
         public Node(T value, K key, int hash)
         {
             Value = value;
             Key = key;
-            HashKey = hash;
         }
     }
 }
