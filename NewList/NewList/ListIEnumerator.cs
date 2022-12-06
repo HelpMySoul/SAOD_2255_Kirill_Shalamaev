@@ -7,43 +7,47 @@ using System.Threading.Tasks;
 
 namespace NewList
 {
-    class ListIEnumerator<T> : IEnumerator
+    partial class NewList<T> 
     {
-        public T[] _newlist;
-        int position = -1;
-        public ListIEnumerator(T[] list)
+        private class ListIEnumerator : IEnumerator
         {
-            _newlist = list;
-        }
-        public bool MoveNext()
-        {
-            position++;
-            return (position < _newlist.Length);
-        }
-        public void Reset()
-        {
-            position = -1;
-        }
-        object IEnumerator.Current
-        {
-            get
+            NewList<T> list;
+            public ListIEnumerator(NewList<T> list)
             {
-                return Current;
+                this.list = list;
             }
-        }
-        public T Current
-        {
-            get
+            private int position = -1;
+
+            public bool MoveNext()
             {
-                try
+                position++;
+                return (position < list.ToArray().Length);
+            }
+            public void Reset()
+            {
+                position = -1;
+            }
+            object IEnumerator.Current
+            {
+                get
                 {
-                    return _newlist[position];
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    throw new InvalidOperationException();
+                    return Current;
                 }
             }
+            public T Current
+            {
+                get
+                {
+                    try
+                    {
+                        return list[position];
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        throw new InvalidOperationException();
+                    }
+                }
+            }
         }
-    }
+    }    
 }
