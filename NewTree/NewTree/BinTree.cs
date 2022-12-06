@@ -9,6 +9,10 @@ namespace NewTree
         public int Count { get; set; }
         public string Show()
         {
+            if (root == null)
+            {
+                return "";
+            }
             List<List<T>> resultlist = new List<List<T>> { };
             NodesToList(root, ref resultlist);
             string result = "";
@@ -184,9 +188,17 @@ namespace NewTree
             if (node.right == null || node.left == null)
             {
                 TreeNode<T> child = (node.left == null) ? node.right : node.left;
-                if (node.parent.right == node) { node.parent.right = child; }
-                else { node.parent.left = child; }
-                child.parent = node.parent;
+                if (node.parent == null)
+                {
+                    child.parent = null;
+                    root = child;
+                }
+                else
+                {
+                    if (node.parent.right == node) { node.parent.right = child; }
+                    else { node.parent.left = child; }
+                    child.parent = node.parent;
+                }
                 ClearRef(node);
                 return true;
             }
