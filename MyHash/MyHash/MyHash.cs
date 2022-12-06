@@ -10,9 +10,9 @@ namespace MyHash
     class MyHash<Key, T> : IEnumerable
     {
         List<Node<Key, T>>[] _arr;
-        IEnumerator IEnumerable.GetEnumerator()
+        public IEnumerator GetEnumerator() 
         {
-            return _arr.GetEnumerator();
+            return new HashEnumerator<Key, T>(_arr);
         }
         public MyHash(int size)
         {
@@ -22,18 +22,17 @@ namespace MyHash
                 _arr[i] = new List<Node<Key, T>> { };
             }
         }
-        public List<Node<Key, T>> this[int index]
+        public T this[Key key] 
         {
-            get => _arr[index];
-            set => _arr[index] = value;
+            get => Find(key);
         }
         int Count
         {
-            get
-            {
-                return _arr.Length;
-            }
+            get {
+                Console.WriteLine(_arr.Length);
+                return _arr.Length; }
         }
+
         public void Add(Key k, T value)
         {
             foreach (Node<Key, T> Node in _arr[HashFunction(k)])
@@ -48,31 +47,35 @@ namespace MyHash
         }
         Node<Key,T> CreateNode(Key k, T value)
         {
-            Node<Key, T> NewNode = new Node<Key, T>(value, k, HashFunction(k));
-            return NewNode;
+            return new Node<Key, T>(value, k, HashFunction(k));     
         }
-        public Node<Key,T> Find(Key k)
+        public T Find(Key k)
         {
-            Node<Key, T> result = null;
             foreach (Node<Key,T> n in _arr[HashFunction(k)])
             {
                 if (k.Equals(n.Key))
                 {
-                    result = n;
-                    break;
+                    return n.Value;
                 }
             }
-            if (result == null)
+            throw new Exception("Нет элемента");
+        }
+        public Node<Key, T> FindNode(Key k)
+        {
+            foreach (Node<Key, T> n in _arr[HashFunction(k)])
             {
-                throw new Exception("Нет элемента");
+                if (k.Equals(n.Key))
+                {
+                    return n;
+                }
             }
-            return result;
+            throw new Exception("Нет элемента");
         }
         public void Delete(Key k)
         {
             try
             {
-                _arr[HashFunction(k)].Remove(Find(k));
+                _arr[HashFunction(k)].Remove(FindNode(k));
             }
             catch
             {
@@ -89,15 +92,15 @@ namespace MyHash
             }
             catch
             {
-                return k.GetHashCode() % Count;
+                return Math.Abs( k.GetHashCode() % Count);
             }           
         }
         public Dictionary<Key, T> GetDic()
         {
             Dictionary<Key, T> result = new Dictionary<Key, T> { };
-            foreach (List<Node<Key, T>> l in _arr)
+            foreach (List<Node<Key, T>> list in _arr)
             {
-                foreach(Node<Key, T> n in l)
+                foreach(Node<Key, T> n in list)
                 {
                     result.Add(n.Key, n.Value);
                 }
