@@ -80,9 +80,8 @@ namespace NewList
             }
             else
             {
-                Node<T> newNode = new Node<T>(value);
                 Node<T> nowNode = first;
-                newNode = FindNodeByIndex(index);
+                Node<T> newNode = FindNodeByIndex(index-1);
                 Node<T> nextNode = nowNode.next;
                 nowNode.next = newNode;
                 newNode.previous = nowNode;
